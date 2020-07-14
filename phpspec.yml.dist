@@ -1,0 +1,4 @@
+suites:
+    main:
+        namespace: Setono\SyliusQuickpayRefundBridgePlugin
+        psr4_prefix: Setono\SyliusQuickpayRefundBridgePlugin

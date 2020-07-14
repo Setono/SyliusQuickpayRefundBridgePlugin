@@ -1,0 +1,3 @@
+setono_sylius_quickpay_refund_bridge_admin:
+    resource: "@SetonoSyliusQuickpayRefundBridgePlugin/Resources/config/routes/admin.yaml"
+    prefix: /admin

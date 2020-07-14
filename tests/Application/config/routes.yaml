@@ -1,0 +1,2 @@
+setono_sylius_quickpay_refund_bridge:
+    resource: "@SetonoSyliusQuickpayRefundBridgePlugin/Resources/config/routes.yaml"

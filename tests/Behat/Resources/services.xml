@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="true" />
+
+        <service id="setono_sylius_quickpay_refund_bridge.behat.context.setup.payment"
+                 class="Tests\Setono\SyliusQuickpayRefundBridgePlugin\Behat\Context\Setup\QuickpayPaymentContext">
+            <argument type="service" id="sylius.behat.shared_storage" />
+            <argument type="service" id="sylius.repository.payment_method" />
+            <argument type="service" id="sylius.fixture.example_factory.payment_method" />
+        </service>
+
+        <service id="setono_sylius_quickpay_refund_bridge.behat.context.ui.refunding"
+                 class="Tests\Setono\SyliusQuickpayRefundBridgePlugin\Behat\Context\Ui\RefundingContext">
+            <argument type="service" id="setono_sylius_quickpay_refund_bridge.behat.page.admin.order_refunds" />
+            <argument type="service" id="sylius.behat.notification_checker" />
+        </service>
+
+        <service id="setono_sylius_quickpay_refund_bridge.behat.page.admin.order_refunds"
+                 class="Tests\Setono\SyliusQuickpayRefundBridgePlugin\Behat\Page\Admin\OrderRefundsPage"
+                 parent="sylius.behat.symfony_page" public="true">
+            <argument type="service" key="$orderRefundsPage" id="Tests\Sylius\RefundPlugin\Behat\Page\Admin\OrderRefundsPage" />
+        </service>
+    </services>
+</container>

@@ -1,0 +1,2 @@
+setono_sylius_quickpay_refund_bridge:
+    select_quickpay_payment: Select the corresponding QuickPay payment
