@@ -13,8 +13,7 @@
         "php": "^7.3",
         "setono/sylius-quickpay-plugin": "^1.0@beta",
         "sylius/refund-plugin": "^1.0.0-RC.3",
-        "sylius/sylius": "^1.7",
-        "symfony/flex": "^1.8"
+        "sylius/sylius": "^1.7"
     },
     "conflict": {
         "symfony/symfony": "*"
