@@ -12,9 +12,19 @@ solid base when developing plugins.
 
 Enjoy! 
 
-## Quickstart
+## Installation
 
-1. Run `composer create-project setono/sylius-quickpay-refund-bridge-plugin:dev-master ProjectName`.
+1. `composer require setono/sylius-quickpay-refund-bridge-plugin:dev-master`
+
+2. Import plugin's routes **after** the routes of Sylius Refund Plugin
+```
+setono_sylius_quickpay_refund_bridge:
+    resource: "@SetonoSyliusQuickpayRefundBridgePlugin/Resources/config/routes.yaml"
+```
+
+## Development and testing
+
+1. Run `composer create-project setono/sylius-quickpay-refund-bridge-plugin:dev-master setono-sylius-quickpay-refund`.
 
 2. From the plugin skeleton root directory, run the following commands:
 

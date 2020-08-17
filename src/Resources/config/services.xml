@@ -25,7 +25,7 @@
 
         <service id="setono_sylius_quickpay_refund_bridge.command_factory.refund_units"
                  class="Setono\SyliusQuickpayRefundBridgePlugin\Command\Factory\RefundUnitsCommandFactory">
-            <argument type="service" id="Sylius\RefundPlugin\Calculator\UnitRefundTotalCalculator" />
+            <argument type="service" id="Sylius\RefundPlugin\Creator\RefundUnitsCommandCreator" />
         </service>
 
         <service id="setono_sylius_quickpay_refund_bridge.command_handler.refund_units"
