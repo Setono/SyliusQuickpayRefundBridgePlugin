@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusQuickpayRefundBridgePlugin\Action;
 
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentInterface as CorePaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Checker\OrderRefundingAvailabilityCheckerInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Webmozart\Assert\Assert;
 
 final class OrderRefundsListAction
 {
@@ -66,12 +68,16 @@ final class OrderRefundsListAction
             return $this->redirectToReferer($order, 'sylius_refund.order_should_be_paid');
         }
 
+        Assert::isInstanceOf($order->getChannel(), ChannelInterface::class);
+
         $paymentMethods = $this->refundPaymentMethodsProvider->findForChannel($order->getChannel());
         $quickpayPayments = $this->getQuickpayPayments($order);
 
-        if (empty($quickpayPayments)) {
-            $paymentMethods = array_filter($paymentMethods, static function (PaymentMethodInterface $method) {
-                return $method->getGatewayConfig()->getFactoryName() !== 'quickpay';
+        if (count($quickpayPayments) === 0) {
+            $paymentMethods = array_filter($paymentMethods, static function (PaymentMethodInterface $method): bool {
+                $gatewayConfig = $method->getGatewayConfig();
+
+                return null !== $gatewayConfig && $gatewayConfig->getFactoryName() !== 'quickpay';
             });
         }
 
@@ -92,25 +98,36 @@ final class OrderRefundsListAction
     }
 
     /**
-     * @return PaymentInterface[]
+     * @return CorePaymentInterface[]
      */
     private function getQuickpayPayments(OrderInterface $order): array
     {
-        return $order
-            ->getPayments()
-            ->filter(
-                static function (PaymentInterface $payment) {
-                    $method = $payment->getMethod();
+        $quickpayPayments = [];
 
-                    if (!($method instanceof PaymentMethodInterface)) {
-                        return false;
-                    }
+        foreach ($order->getPayments() as $payment) {
+            if (!($payment instanceof CorePaymentInterface)) {
+                continue;
+            }
 
-                    return $method->getGatewayConfig()->getFactoryName() === 'quickpay'
-                        && $payment->getState() === $payment::STATE_COMPLETED
-                        && !empty($payment->getDetails()['quickpayPaymentId']);
-                }
-            )
-            ->toArray();
+            $method = $payment->getMethod();
+
+            if (!($method instanceof PaymentMethodInterface)) {
+                continue;
+            }
+
+            $gatewayConfig = $method->getGatewayConfig();
+            $details = $payment->getDetails();
+
+            if (null !== $gatewayConfig && $gatewayConfig->getFactoryName() === 'quickpay'
+                && $payment->getState() === $payment::STATE_COMPLETED
+                && isset($details['quickpayPaymentId'])
+                && trim((string) $details['quickpayPaymentId']) !== '') {
+                continue;
+            }
+
+            $quickpayPayments[] = $payment;
+        }
+
+        return $quickpayPayments;
     }
 }

@@ -20,9 +20,12 @@ final class RefundUnitsCommandFactory implements RefundUnitsCommandFactoryInterf
 
     public function fromRequest(Request $request): RefundUnits
     {
-        return new RefundUnits(
-            $this->baseRefundUnitsCommandFactory->fromRequest($request),
-            (int) $request->request->get('sylius_refund_quickpay_payment') ?: null
-        );
+        $quickpayPaymentId = $request->request->get('sylius_refund_quickpay_payment');
+
+        if (null !== $quickpayPaymentId) {
+            $quickpayPaymentId = (int) $quickpayPaymentId;
+        }
+
+        return new RefundUnits($this->baseRefundUnitsCommandFactory->fromRequest($request), $quickpayPaymentId);
     }
 }

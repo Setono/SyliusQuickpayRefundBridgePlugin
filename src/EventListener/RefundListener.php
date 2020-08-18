@@ -10,6 +10,7 @@ use Setono\SyliusQuickpayRefundBridgePlugin\Event\UnitsRefunded;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
+use Webmozart\Assert\Assert;
 
 final class RefundListener
 {
@@ -43,10 +44,11 @@ final class RefundListener
             return;
         }
 
-        /** @var PaymentMethodInterface|null $paymentMethod */
         if (null === $paymentMethod = $payment->getMethod()) {
             return;
         }
+
+        Assert::isInstanceOf($paymentMethod, PaymentMethodInterface::class);
 
         $gatewayConfig = $paymentMethod->getGatewayConfig();
 

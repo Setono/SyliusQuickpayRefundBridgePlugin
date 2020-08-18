@@ -12,6 +12,7 @@ use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Event\UnitsRefunded as BaseUnitsRefunded;
 use Sylius\RefundPlugin\Refunder\RefunderInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Webmozart\Assert\Assert;
 
 final class RefundUnitsHandler
 {
@@ -57,6 +58,8 @@ final class RefundUnitsHandler
         $refundedTotal = 0;
         $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($baseCommand->units(), $orderNumber);
         $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($baseCommand->shipments(), $orderNumber);
+
+        Assert::notNull($order->getCurrencyCode());
 
         $baseEvent = new BaseUnitsRefunded(
             $orderNumber,

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusQuickpayRefundBridgePlugin\Exception;
 
+use function Safe\sprintf;
+
 final class UnexpectedPaymentOrderException extends \InvalidArgumentException
 {
     public static function expectedOrder(string $orderNumber): self
