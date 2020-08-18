@@ -22,7 +22,7 @@ final class RefundUnitsCommandFactory implements RefundUnitsCommandFactoryInterf
     {
         return new RefundUnits(
             $this->baseRefundUnitsCommandFactory->fromRequest($request),
-            (int)$request->request->get('sylius_refund_quickpay_payment') ?: null
+            (int) $request->request->get('sylius_refund_quickpay_payment') ?: null
         );
     }
 }

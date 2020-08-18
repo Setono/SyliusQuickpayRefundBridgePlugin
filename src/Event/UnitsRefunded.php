@@ -22,9 +22,6 @@ class UnitsRefunded
         $this->paymentId = $paymentId;
     }
 
-    /**
-     * @return BaseUnitsRefunded
-     */
     public function baseEvent(): BaseUnitsRefunded
     {
         return $this->baseEvent;

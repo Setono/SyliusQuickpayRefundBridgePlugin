@@ -6,6 +6,7 @@ namespace Tests\Setono\SyliusQuickpayRefundBridgePlugin\Behat\Context\Setup;
 
 use Behat\Behat\Context\Context;
 use Doctrine\Common\Collections\Collection;
+use function Safe\sprintf;
 use Sylius\Behat\Service\SharedStorageInterface;
 use Sylius\Bundle\CoreBundle\Fixture\Factory\ExampleFactoryInterface;
 use Sylius\Component\Core\Formatter\StringInflector;
@@ -17,8 +18,6 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Payment\Repository\PaymentMethodRepositoryInterface;
 use Symfony\Component\Intl\Countries;
 use Webmozart\Assert\Assert;
-
-use function Safe\sprintf;
 
 final class QuickpayPaymentContext implements Context
 {
@@ -130,7 +129,6 @@ final class QuickpayPaymentContext implements Context
 
     /**
      * @param Collection|OrderItemInterface[] $items
-     * @return array
      */
     private function convertItems(Collection $items): array
     {
@@ -145,7 +143,7 @@ final class QuickpayPaymentContext implements Context
                         $item->getVariantName()
                     ),
                     'item_price' => $item->getUnitPrice(),
-                    'vat_rate' => 0.25
+                    'vat_rate' => 0.25,
                 ];
             }
         )->toArray();

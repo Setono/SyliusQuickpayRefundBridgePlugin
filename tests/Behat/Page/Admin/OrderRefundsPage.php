@@ -123,7 +123,7 @@ final class OrderRefundsPage extends SymfonyPage implements OrderRefundsPageInte
     protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
-            'quickpay_payments' => '#quickpay-payment'
+            'quickpay_payments' => '#quickpay-payment',
         ]);
     }
 }

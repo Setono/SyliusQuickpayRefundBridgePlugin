@@ -92,7 +92,6 @@ final class OrderRefundsListAction
     }
 
     /**
-     * @param OrderInterface $order
      * @return PaymentInterface[]
      */
     private function getQuickpayPayments(OrderInterface $order): array

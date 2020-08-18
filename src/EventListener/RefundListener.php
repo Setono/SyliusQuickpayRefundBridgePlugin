@@ -13,14 +13,10 @@ use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 
 final class RefundListener
 {
-    /**
-     * @var RegistryInterface
-     */
+    /** @var RegistryInterface */
     private $payum;
 
-    /**
-     * @var PaymentRepositoryInterface
-     */
+    /** @var PaymentRepositoryInterface */
     private $paymentRepository;
 
     public function __construct(
@@ -47,7 +43,7 @@ final class RefundListener
             return;
         }
 
-        /** @var $paymentMethod PaymentMethodInterface|null */
+        /** @var PaymentMethodInterface|null $paymentMethod */
         if (null === $paymentMethod = $payment->getMethod()) {
             return;
         }

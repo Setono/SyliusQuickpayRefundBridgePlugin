@@ -22,9 +22,6 @@ class RefundUnits
         $this->baseCommand = $baseCommand;
     }
 
-    /**
-     * @return BaseRefundUnits
-     */
     public function baseCommand(): BaseRefundUnits
     {
         return $this->baseCommand;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusQuickpayRefundBridgePlugin\DependencyInjection;
 
-use Setono\SyliusQuickpayRefundBridgePlugin\DependencyInjection\SetonoSyliusQuickpayRefundBridgeExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Setono\SyliusQuickpayRefundBridgePlugin\DependencyInjection\SetonoSyliusQuickpayRefundBridgeExtension;
 
 /**
  * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyDependencyInjectionTest
