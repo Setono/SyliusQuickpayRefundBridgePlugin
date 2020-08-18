@@ -33,7 +33,7 @@ jobs:
                 run: composer validate --strict
             -   name: Check composer normalized
                 run: composer normalize --dry-run
-            # Outcommented because of this exception
+            # Commented because of this exception
             # Invalid definition for service "sylius_refund.controller.refund": argument 5 of
             # "Sylius\Bundle\ResourceBundle\Controller\ResourceController::__construct" accepts
             # "Sylius\Component\Resource\Factory\FactoryInterface", "Sylius\RefundPlugin\Factory\RefundFactory" passed.
