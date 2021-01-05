@@ -8,16 +8,12 @@ use Sylius\RefundPlugin\Event\UnitsRefunded as BaseUnitsRefunded;
 
 class UnitsRefunded
 {
-    /** @var BaseUnitsRefunded */
-    private $baseEvent;
+    private BaseUnitsRefunded $baseEvent;
 
-    /** @var int|null */
-    private $paymentId;
+    private ?int $paymentId;
 
-    public function __construct(
-        BaseUnitsRefunded $baseEvent,
-        ?int $paymentId = null
-    ) {
+    public function __construct(BaseUnitsRefunded $baseEvent, ?int $paymentId = null)
+    {
         $this->baseEvent = $baseEvent;
         $this->paymentId = $paymentId;
     }

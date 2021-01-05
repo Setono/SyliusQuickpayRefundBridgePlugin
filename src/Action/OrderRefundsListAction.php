@@ -15,36 +15,31 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webmozart\Assert\Assert;
 
 final class OrderRefundsListAction
 {
-    /** @var OrderRepositoryInterface */
-    private $orderRepository;
+    private OrderRepositoryInterface $orderRepository;
 
-    /** @var OrderRefundingAvailabilityCheckerInterface */
-    private $orderRefundsListAvailabilityChecker;
+    private OrderRefundingAvailabilityCheckerInterface $orderRefundsListAvailabilityChecker;
 
-    /** @var RefundPaymentMethodsProviderInterface */
-    private $refundPaymentMethodsProvider;
+    private RefundPaymentMethodsProviderInterface $refundPaymentMethodsProvider;
 
-    /** @var Environment */
-    private $twig;
+    private Environment $twig;
 
-    /** @var Session */
-    private $session;
+    private SessionInterface $session;
 
-    /** @var UrlGeneratorInterface */
-    private $router;
+    private UrlGeneratorInterface $router;
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         OrderRefundingAvailabilityCheckerInterface $orderRefundsListAvailabilityChecker,
         RefundPaymentMethodsProviderInterface $refundPaymentMethodsProvider,
         Environment $twig,
-        Session $session,
+        SessionInterface $session,
         UrlGeneratorInterface $router
     ) {
         $this->orderRepository = $orderRepository;
@@ -92,7 +87,9 @@ final class OrderRefundsListAction
 
     private function redirectToReferer(OrderInterface $order, string $message): Response
     {
-        $this->session->getFlashBag()->add('error', $message);
+        if ($this->session instanceof Session) {
+            $this->session->getFlashBag()->add('error', $message);
+        }
 
         return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $order->getId()]));
     }

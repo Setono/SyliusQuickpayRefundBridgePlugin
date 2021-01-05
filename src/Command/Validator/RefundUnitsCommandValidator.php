@@ -14,11 +14,9 @@ use Webmozart\Assert\Assert;
 
 final class RefundUnitsCommandValidator implements RefundUnitsCommandValidatorInterface
 {
-    /** @var BaseRefundUnitsCommandValidatorInterface */
-    private $baseRefundUnitsCommandValidator;
+    private BaseRefundUnitsCommandValidatorInterface $baseRefundUnitsCommandValidator;
 
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
+    private PaymentRepositoryInterface $paymentRepository;
 
     public function __construct(
         BaseRefundUnitsCommandValidatorInterface $baseRefundUnitsCommandValidator,

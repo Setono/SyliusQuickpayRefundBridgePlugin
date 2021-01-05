@@ -8,16 +8,12 @@ use Sylius\RefundPlugin\Command\RefundUnits as BaseRefundUnits;
 
 class RefundUnits
 {
-    /** @var BaseRefundUnits */
-    private $baseCommand;
+    private BaseRefundUnits $baseCommand;
 
-    /** @var int|null */
-    private $paymentId;
+    private ?int $paymentId;
 
-    public function __construct(
-        BaseRefundUnits $baseCommand,
-        ?int $paymentId = null
-    ) {
+    public function __construct(BaseRefundUnits $baseCommand, ?int $paymentId = null)
+    {
         $this->paymentId = $paymentId;
         $this->baseCommand = $baseCommand;
     }
