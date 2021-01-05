@@ -4,6 +4,7 @@
 [![Latest Unstable Version][ico-unstable-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-github-actions]][link-github-actions]
+[![Code Coverage][ico-code-coverage]][link-code-coverage]
 
 ## Installation
 
@@ -41,6 +42,8 @@ To be able to setup a plugin's database, remember to configure you database cred
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-quickpay-refund-bridge-plugin/v/unstable
 [ico-license]: https://poser.pugx.org/setono/sylius-quickpay-refund-bridge-plugin/license
 [ico-github-actions]: https://github.com/Setono/SyliusQuickpayRefundBridgePlugin/workflows/build/badge.svg
+[ico-code-coverage]: https://codecov.io/gh/Setono/SyliusQuickpayRefundBridgePlugin/branch/master/graph/badge.svg
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-quickpay-refund-bridge-plugin
 [link-github-actions]: https://github.com/Setono/SyliusQuickpayRefundBridgePlugin/actions
+[link-code-coverage]: https://codecov.io/gh/Setono/SyliusQuickpayRefundBridgePlugin
