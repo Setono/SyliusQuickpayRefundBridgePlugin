@@ -10,53 +10,42 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
+        "payum/payum": "^1.6",
+        "psr/log": "^1.1",
         "setono/sylius-quickpay-plugin": "^1.0@beta",
-        "sylius/refund-plugin": "^1.0.0-RC.3",
-        "sylius/sylius": "^1.7"
-    },
-    "conflict": {
-        "symfony/symfony": "*"
+        "sylius/refund-plugin": "^1.0@rc",
+        "symfony/config": "^4.4 || ^5.0",
+        "symfony/dependency-injection": "^4.4 || ^5.0",
+        "symfony/http-foundation": "^4.4 || ^5.0.7",
+        "symfony/http-kernel": "^4.4 || ^5.1.5",
+        "symfony/messenger": "^4.4 || ^5.0",
+        "symfony/routing": "^4.4 || ^5.0",
+        "thecodingmachine/safe": "^1.3",
+        "twig/twig": "^2.0 || ^3.0",
+        "webmozart/assert": "^1.9"
     },
     "require-dev": {
-        "behat/behat": "^3.6.1",
-        "behat/mink-selenium2-driver": "^1.4",
-        "dmore/behat-chrome-extension": "^1.3",
-        "dmore/chrome-mink-driver": "^2.7",
-        "friends-of-behat/mink": "^1.8",
-        "friends-of-behat/mink-browserkit-driver": "^1.4",
-        "friends-of-behat/mink-extension": "^2.4",
-        "friends-of-behat/page-object-extension": "^0.3.1",
-        "friends-of-behat/suite-settings-extension": "^1.0",
-        "friends-of-behat/symfony-extension": "^2.1",
-        "friends-of-behat/variadic-extension": "^1.3",
-        "matthiasnoback/symfony-config-test": "^4.1",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.1",
+        "matthiasnoback/symfony-config-test": "^4.2",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.2",
         "phpspec/phpspec": "^6.1",
         "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
-        "setono/code-quality-pack": "^1.0",
-        "symfony/browser-kit": "^4.4",
-        "symfony/debug-bundle": "^4.4",
-        "symfony/dotenv": "^4.4",
-        "symfony/intl": "^4.4",
-        "symfony/maker-bundle": "^1.15",
-        "symfony/web-profiler-bundle": "^4.4"
+        "setono/code-quality-pack": "^1.5",
+        "setono/sylius-behat-pack": "^0.1",
+        "sylius/sylius": "~1.7.0",
+        "symfony/debug-bundle": "^4.4 || ^5.0",
+        "symfony/dotenv": "^4.4 || ^5.0",
+        "symfony/intl": "^4.4 || ^5.0",
+        "symfony/web-profiler-bundle": "^4.4 || ^5.0"
     },
     "config": {
         "sort-packages": true
     },
     "extra": {
-        "bin-dir": "tests/Application/bin",
         "branch-alias": {
             "dev-master": "1.0-dev"
-        },
-        "config-dir": "tests/Application/config",
-        "public-dir": "tests/Application/public",
-        "symfony": {
-            "allow-contrib": true
-        },
-        "var-dir": "tests/Application/var"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -71,22 +60,16 @@
             "tests/Application/Kernel.php"
         ]
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "post-install-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-update-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-create-project-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon -l max src",
-        "check-style": "vendor/bin/ecs check src/ spec/ tests/",
-        "fix-style": "vendor/bin/ecs check src/ spec/ tests/ --fix",
-        "phpspec": "vendor/bin/phpspec run -vvv",
-        "phpunit": "vendor/bin/phpunit"
+        "post-install-cmd": "@node-symlink",
+        "post-update-cmd": "@node-symlink",
+        "post-create-project-cmd": "@node-symlink",
+        "analyse": "phpstan analyse -c phpstan.neon",
+        "check-style": "ecs check src/ spec/ tests/",
+        "fix-style": "ecs check src/ spec/ tests/ --fix",
+        "node-symlink": "php bin/create_node_symlink.php",
+        "phpspec": "phpspec run -vvv",
+        "phpunit": "phpunit"
     }
 }

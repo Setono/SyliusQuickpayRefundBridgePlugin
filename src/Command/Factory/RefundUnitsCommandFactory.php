@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class RefundUnitsCommandFactory implements RefundUnitsCommandFactoryInterface
 {
-    /** @var RefundUnitsCommandCreatorInterface */
-    private $baseRefundUnitsCommandFactory;
+    private RefundUnitsCommandCreatorInterface $baseRefundUnitsCommandFactory;
 
     public function __construct(RefundUnitsCommandCreatorInterface $baseRefundUnitsCommandFactory)
     {

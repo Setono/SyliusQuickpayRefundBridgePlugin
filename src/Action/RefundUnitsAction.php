@@ -11,30 +11,26 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class RefundUnitsAction
 {
-    /** @var MessageBusInterface */
-    private $commandBus;
+    private MessageBusInterface $commandBus;
 
-    /** @var Session */
-    private $session;
+    private SessionInterface $session;
 
-    /** @var UrlGeneratorInterface */
-    private $router;
+    private UrlGeneratorInterface $router;
 
-    /** @var RefundUnitsCommandFactoryInterface */
-    private $commandFactory;
+    private RefundUnitsCommandFactoryInterface $commandFactory;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         MessageBusInterface $commandBus,
-        Session $session,
+        SessionInterface $session,
         UrlGeneratorInterface $router,
         RefundUnitsCommandFactoryInterface $commandFactory,
         LoggerInterface $logger
@@ -51,18 +47,17 @@ final class RefundUnitsAction
         try {
             $this->commandBus->dispatch($this->commandFactory->fromRequest($request));
 
-            $this->session->getFlashBag()->add('success', 'sylius_refund.units_successfully_refunded');
+            $this->addFlash('success', 'sylius_refund.units_successfully_refunded');
         } catch (InvalidRefundAmountException $exception) {
-            $this->session->getFlashBag()->add('error', $exception->getMessage());
+            $this->addFlash('error', $exception->getMessage());
 
             $this->logger->error($exception->getMessage());
         } catch (HandlerFailedException $exception) {
-            /** @var \Exception $previousException */
             $previousException = $exception->getPrevious();
 
             $this->provideErrorMessage($previousException);
 
-            $this->logger->error($previousException->getMessage());
+            $this->logger->error($previousException === null ? 'An error occurred' : $previousException->getMessage());
         }
 
         return new RedirectResponse($this->router->generate(
@@ -70,14 +65,23 @@ final class RefundUnitsAction
         ));
     }
 
-    private function provideErrorMessage(\Exception $previousException): void
+    private function provideErrorMessage(?\Throwable $previousException): void
     {
         if ($previousException instanceof InvalidRefundAmountException) {
-            $this->session->getFlashBag()->add('error', $previousException->getMessage());
+            $this->addFlash('error', $previousException->getMessage());
 
             return;
         }
 
-        $this->session->getFlashBag()->add('error', 'sylius_refund.error_occurred');
+        $this->addFlash('error', 'sylius_refund.error_occurred');
+    }
+
+    private function addFlash(string $type, string $message): void
+    {
+        if (!$this->session instanceof Session) {
+            return;
+        }
+
+        $this->session->getFlashBag()->add($type, $message);
     }
 }

@@ -14,11 +14,9 @@ use Webmozart\Assert\Assert;
 
 final class RefundListener
 {
-    /** @var RegistryInterface */
-    private $payum;
+    private RegistryInterface $payum;
 
-    /** @var PaymentRepositoryInterface */
-    private $paymentRepository;
+    private PaymentRepositoryInterface $paymentRepository;
 
     public function __construct(
         RegistryInterface $payum,
