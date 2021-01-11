@@ -20,21 +20,22 @@ setono_sylius_quickpay_refund_bridge:
 
 1. Run `composer create-project setono/sylius-quickpay-refund-bridge-plugin:dev-master setono-sylius-quickpay-refund`.
 
-2. From the plugin skeleton root directory, run the following commands:
+2. From the plugin root directory, run the following commands:
 
     ```bash
-    $ php init
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && bin/console assets:install)
+    (cd tests/Application && yarn install)
+    (cd tests/Application && yarn build)
+    (cd tests/Application && bin/console assets:install)
     
-    $ (cd tests/Application && bin/console doctrine:database:create)
-    $ (cd tests/Application && bin/console doctrine:schema:create)
+    (cd tests/Application && bin/console doctrine:database:create)
+    (cd tests/Application && bin/console doctrine:schema:create)
    
-    $ (cd tests/Application && bin/console sylius:fixtures:load -n)
+    (cd tests/Application && bin/console sylius:fixtures:load -n)
     ```
    
-3. Start your local PHP server: `symfony serve` (see https://symfony.com/doc/current/setup/symfony_server.html for docs)
+3. Start your local PHP server (see [docs](https://symfony.com/doc/current/setup/symfony_server.html)):
+   
+    `(cd tests/Application && symfony serve)` 
 
 To be able to setup a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
 

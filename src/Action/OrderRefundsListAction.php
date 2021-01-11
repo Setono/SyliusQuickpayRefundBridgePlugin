@@ -115,10 +115,10 @@ final class OrderRefundsListAction
             $gatewayConfig = $method->getGatewayConfig();
             $details = $payment->getDetails();
 
-            if (null !== $gatewayConfig && $gatewayConfig->getFactoryName() === 'quickpay'
-                && $payment->getState() === $payment::STATE_COMPLETED
-                && isset($details['quickpayPaymentId'])
-                && trim((string) $details['quickpayPaymentId']) !== '') {
+            if (null === $gatewayConfig || $gatewayConfig->getFactoryName() !== 'quickpay'
+                || $payment->getState() !== $payment::STATE_COMPLETED
+                || !isset($details['quickpayPaymentId'])
+                || trim((string) $details['quickpayPaymentId']) === '') {
                 continue;
             }
 

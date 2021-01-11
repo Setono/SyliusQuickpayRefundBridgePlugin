@@ -1,5 +1,7 @@
 {% import '@SyliusAdmin/Common/Macro/money.html.twig' as money %}
 
+{% set quickpay_payments = quickpay_payments|filter(p => p.details.quickpayPaymentId is defined) %}
+
 {% if quickpay_payments is not empty %}
     <div class="field" id="quickpay-payment-wrapper">
         <label for="quickpay-payment">{{ 'setono_sylius_quickpay_refund_bridge.select_quickpay_payment'|trans }}</label>
