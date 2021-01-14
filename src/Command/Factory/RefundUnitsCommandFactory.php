@@ -5,26 +5,31 @@ declare(strict_types=1);
 namespace Setono\SyliusQuickpayRefundBridgePlugin\Command\Factory;
 
 use Setono\SyliusQuickpayRefundBridgePlugin\Command\RefundUnits;
-use Sylius\RefundPlugin\Creator\RefundUnitsCommandCreatorInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Setono\SyliusQuickpayRefundBridgePlugin\Payment\ProviderInterface;
+use Sylius\RefundPlugin\Command\RefundUnits as BaseRefundUnits;
+use Sylius\RefundPlugin\Event\UnitsRefunded;
 
 final class RefundUnitsCommandFactory implements RefundUnitsCommandFactoryInterface
 {
-    private RefundUnitsCommandCreatorInterface $baseRefundUnitsCommandFactory;
+    private ProviderInterface $paymentProvider;
 
-    public function __construct(RefundUnitsCommandCreatorInterface $baseRefundUnitsCommandFactory)
+    public function __construct(ProviderInterface $paymentProvider)
     {
-        $this->baseRefundUnitsCommandFactory = $baseRefundUnitsCommandFactory;
+        $this->paymentProvider = $paymentProvider;
     }
 
-    public function fromRequest(Request $request): RefundUnits
+    public function fromEvent(UnitsRefunded $event): RefundUnits
     {
-        $quickpayPaymentId = $request->request->get('sylius_refund_quickpay_payment');
+        $baseCommand = new BaseRefundUnits(
+            $event->orderNumber(),
+            $event->units(),
+            $event->shipments(),
+            $event->paymentMethodId(),
+            $event->comment()
+        );
 
-        if (null !== $quickpayPaymentId) {
-            $quickpayPaymentId = (int) $quickpayPaymentId;
-        }
+        $quickpayPaymentId = ($this->paymentProvider)($event);
 
-        return new RefundUnits($this->baseRefundUnitsCommandFactory->fromRequest($request), $quickpayPaymentId);
+        return new RefundUnits($baseCommand, $event->amount(), $quickpayPaymentId);
     }
 }

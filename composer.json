@@ -66,6 +66,7 @@
         "post-update-cmd": "@node-symlink",
         "post-create-project-cmd": "@node-symlink",
         "analyse": "phpstan analyse -c phpstan.neon",
+        "behat": "behat --colors --strict --no-interaction -vvv -f progress --tags=\"@quickpay-refunds && @ui\"",
         "check-style": "ecs check src/ spec/ tests/",
         "fix-style": "ecs check src/ spec/ tests/ --fix",
         "node-symlink": "php bin/create_node_symlink.php",

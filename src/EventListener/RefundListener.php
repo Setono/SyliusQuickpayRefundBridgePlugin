@@ -4,63 +4,27 @@ declare(strict_types=1);
 
 namespace Setono\SyliusQuickpayRefundBridgePlugin\EventListener;
 
-use Payum\Core\Registry\RegistryInterface;
-use Payum\Core\Request\Refund;
-use Setono\SyliusQuickpayRefundBridgePlugin\Event\UnitsRefunded;
-use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
-use Webmozart\Assert\Assert;
+use Setono\SyliusQuickpayRefundBridgePlugin\Command\Factory\RefundUnitsCommandFactoryInterface;
+use Sylius\RefundPlugin\Event\UnitsRefunded;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final class RefundListener
 {
-    private RegistryInterface $payum;
+    private RefundUnitsCommandFactoryInterface $commandFactory;
 
-    private PaymentRepositoryInterface $paymentRepository;
+    private MessageBusInterface $commandBus;
 
     public function __construct(
-        RegistryInterface $payum,
-        PaymentRepositoryInterface $paymentRepository
+        RefundUnitsCommandFactoryInterface $commandFactory,
+        MessageBusInterface $commandBus
     ) {
-        $this->payum = $payum;
-        $this->paymentRepository = $paymentRepository;
+        $this->commandFactory = $commandFactory;
+        $this->commandBus = $commandBus;
     }
 
     public function __invoke(UnitsRefunded $event): void
     {
-        if (null === $event->paymentId()) {
-            return;
-        }
-
-        $payment = $this->paymentRepository->find($event->paymentId());
-
-        if (!($payment instanceof PaymentInterface)) {
-            return;
-        }
-
-        if (!isset($payment->getDetails()['quickpayPaymentId'])) {
-            return;
-        }
-
-        if (null === $paymentMethod = $payment->getMethod()) {
-            return;
-        }
-
-        Assert::isInstanceOf($paymentMethod, PaymentMethodInterface::class);
-
-        $gatewayConfig = $paymentMethod->getGatewayConfig();
-
-        if (null === $gatewayConfig || $gatewayConfig->getFactoryName() !== 'quickpay') {
-            return;
-        }
-
-        $params = [
-            'quickpayPaymentId' => $payment->getDetails()['quickpayPaymentId'],
-            'amount' => $event->baseEvent()->amount(),
-        ];
-
-        $gatewayFactory = $this->payum->getGatewayFactory('quickpay');
-        $gateway = $gatewayFactory->create($gatewayConfig->getConfig());
-        $gateway->execute(new Refund($params));
+        $command = $this->commandFactory->fromEvent($event);
+        $this->commandBus->dispatch($command);
     }
 }

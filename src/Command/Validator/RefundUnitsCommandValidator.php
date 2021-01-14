@@ -9,27 +9,20 @@ use Setono\SyliusQuickpayRefundBridgePlugin\Exception\PaymentNotFoundException;
 use Setono\SyliusQuickpayRefundBridgePlugin\Exception\UnexpectedPaymentOrderException;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
-use Sylius\RefundPlugin\Validator\RefundUnitsCommandValidatorInterface as BaseRefundUnitsCommandValidatorInterface;
 use Webmozart\Assert\Assert;
 
 final class RefundUnitsCommandValidator implements RefundUnitsCommandValidatorInterface
 {
-    private BaseRefundUnitsCommandValidatorInterface $baseRefundUnitsCommandValidator;
-
     private PaymentRepositoryInterface $paymentRepository;
 
-    public function __construct(
-        BaseRefundUnitsCommandValidatorInterface $baseRefundUnitsCommandValidator,
-        PaymentRepositoryInterface $paymentRepository
-    ) {
-        $this->baseRefundUnitsCommandValidator = $baseRefundUnitsCommandValidator;
+    public function __construct(PaymentRepositoryInterface $paymentRepository)
+    {
         $this->paymentRepository = $paymentRepository;
     }
 
     public function validate(RefundUnits $command): void
     {
         $baseCommand = $command->baseCommand();
-        $this->baseRefundUnitsCommandValidator->validate($baseCommand);
 
         Assert::notNull($command->paymentId(), 'Quickpay payment ID is required.');
 

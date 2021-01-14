@@ -10,17 +10,25 @@ class RefundUnits
 {
     private BaseRefundUnits $baseCommand;
 
+    private int $amount;
+
     private ?int $paymentId;
 
-    public function __construct(BaseRefundUnits $baseCommand, ?int $paymentId = null)
+    public function __construct(BaseRefundUnits $baseCommand, int $amount, ?int $paymentId = null)
     {
-        $this->paymentId = $paymentId;
         $this->baseCommand = $baseCommand;
+        $this->amount = $amount;
+        $this->paymentId = $paymentId;
     }
 
     public function baseCommand(): BaseRefundUnits
     {
         return $this->baseCommand;
+    }
+
+    public function amount(): int
+    {
+        return $this->amount;
     }
 
     public function paymentId(): ?int
