@@ -36,7 +36,7 @@ final class OrderBasedProvider implements ProviderInterface
             return null;
         }
 
-        if ($method->getId() === $event->paymentMethodId()) {
+        if ($method->getId() !== $event->paymentMethodId()) {
             return null;
         }
 
