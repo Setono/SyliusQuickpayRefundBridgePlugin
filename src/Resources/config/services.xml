@@ -13,43 +13,46 @@
             <tag name="controller.service_arguments" />
         </service>
 
-        <service id="setono_sylius_quickpay_refund_bridge.action.order_refund_units"
-                 class="Setono\SyliusQuickpayRefundBridgePlugin\Action\RefundUnitsAction">
-            <argument type="service" id="sylius_refund_plugin.command_bus" />
-            <argument type="service" id="session" />
-            <argument type="service" id="router" />
-            <argument type="service" id="setono_sylius_quickpay_refund_bridge.command_factory.refund_units" />
-            <argument type="service" id="monolog.logger" />
-            <tag name="controller.service_arguments" />
-        </service>
-
         <service id="setono_sylius_quickpay_refund_bridge.command_factory.refund_units"
                  class="Setono\SyliusQuickpayRefundBridgePlugin\Command\Factory\RefundUnitsCommandFactory">
-            <argument type="service" id="Sylius\RefundPlugin\Creator\RefundUnitsCommandCreator" />
+            <argument type="service" id="setono_sylius_quickpay_refund_bridge.payment_provider.composite" />
         </service>
 
         <service id="setono_sylius_quickpay_refund_bridge.command_handler.refund_units"
                  class="Setono\SyliusQuickpayRefundBridgePlugin\Command\Handler\RefundUnitsHandler">
-            <argument type="service" id="Sylius\RefundPlugin\Refunder\OrderItemUnitsRefunder" />
-            <argument type="service" id="Sylius\RefundPlugin\Refunder\OrderShipmentsRefunder" />
-            <argument type="service" id="sylius_refund_plugin.event_bus" />
-            <argument type="service" id="sylius.repository.order" />
+            <argument type="service" id="payum" />
             <argument type="service" id="setono_sylius_quickpay_refund_bridge.command_validator.refund_units" />
+            <argument type="service" id="sylius.repository.payment" />
             <tag name="messenger.message_handler" />
         </service>
 
         <service id="setono_sylius_quickpay_refund_bridge.command_validator.refund_units"
                  class="Setono\SyliusQuickpayRefundBridgePlugin\Command\Validator\RefundUnitsCommandValidator">
-            <argument type="service" id="Sylius\RefundPlugin\Validator\RefundUnitsCommandValidator" />
             <argument type="service" id="sylius.repository.payment" />
         </service>
 
-
         <service id="setono_sylius_quickpay_refund_bridge.listener.refund"
                  class="Setono\SyliusQuickpayRefundBridgePlugin\EventListener\RefundListener">
-            <argument type="service" id="payum" />
-            <argument type="service" id="sylius.repository.payment" />
+            <argument type="service" id="setono_sylius_quickpay_refund_bridge.command_factory.refund_units" />
+            <argument type="service" id="sylius_refund_plugin.command_bus" />
             <tag name="messenger.message_handler" />
+        </service>
+
+        <service id="setono_sylius_quickpay_refund_bridge.payment_provider.composite"
+                 class="Setono\SyliusQuickpayRefundBridgePlugin\Payment\CompositeProvider">
+            <argument type="tagged_iterator" tag="setono_sylius_quickpay_refund_bridge.payment_provider" />
+        </service>
+
+        <service id="setono_sylius_quickpay_refund_bridge.payment_provider.request_based"
+                 class="Setono\SyliusQuickpayRefundBridgePlugin\Payment\RequestBasedProvider">
+            <argument type="service" id="request_stack" />
+            <tag name="setono_sylius_quickpay_refund_bridge.payment_provider" priority="20" />
+        </service>
+
+        <service id="setono_sylius_quickpay_refund_bridge.payment_provider.order_based"
+                 class="Setono\SyliusQuickpayRefundBridgePlugin\Payment\OrderBasedProvider">
+            <argument type="service" id="sylius.repository.order" />
+            <tag name="setono_sylius_quickpay_refund_bridge.payment_provider" priority="10" />
         </service>
     </services>
 </container>

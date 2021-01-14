@@ -70,6 +70,7 @@
         "fix-style": "ecs check src/ spec/ tests/ --fix",
         "node-symlink": "php bin/create_node_symlink.php",
         "phpspec": "phpspec run -vvv",
-        "phpunit": "phpunit"
+        "phpunit": "phpunit",
+        "behat": "behat --colors --strict --no-interaction -vvv -f progress --tags=\"@quickpay-refunds && @ui\""
     }
 }

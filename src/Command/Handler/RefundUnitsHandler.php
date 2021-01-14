@@ -4,69 +4,70 @@ declare(strict_types=1);
 
 namespace Setono\SyliusQuickpayRefundBridgePlugin\Command\Handler;
 
+use Payum\Core\Registry\RegistryInterface;
+use Payum\Core\Request\Refund;
 use Setono\SyliusQuickpayRefundBridgePlugin\Command\RefundUnits;
 use Setono\SyliusQuickpayRefundBridgePlugin\Command\Validator\RefundUnitsCommandValidatorInterface;
-use Setono\SyliusQuickpayRefundBridgePlugin\Event\UnitsRefunded;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Repository\OrderRepositoryInterface;
-use Sylius\RefundPlugin\Event\UnitsRefunded as BaseUnitsRefunded;
-use Sylius\RefundPlugin\Refunder\RefunderInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Webmozart\Assert\Assert;
 
 final class RefundUnitsHandler
 {
-    private RefunderInterface $orderUnitsRefunder;
+    private RegistryInterface $payum;
 
-    private RefunderInterface $orderShipmentsRefunder;
+    private RefundUnitsCommandValidatorInterface $commandValidator;
 
-    private MessageBusInterface $eventBus;
-
-    private OrderRepositoryInterface $orderRepository;
-
-    private RefundUnitsCommandValidatorInterface $refundUnitsCommandValidator;
+    private PaymentRepositoryInterface $paymentRepository;
 
     public function __construct(
-        RefunderInterface $orderUnitsRefunder,
-        RefunderInterface $orderShipmentsRefunder,
-        MessageBusInterface $eventBus,
-        OrderRepositoryInterface $orderRepository,
-        RefundUnitsCommandValidatorInterface $refundUnitsCommandValidator
+        RegistryInterface $payum,
+        RefundUnitsCommandValidatorInterface $commandValidator,
+        PaymentRepositoryInterface $paymentRepository
     ) {
-        $this->orderUnitsRefunder = $orderUnitsRefunder;
-        $this->orderShipmentsRefunder = $orderShipmentsRefunder;
-        $this->eventBus = $eventBus;
-        $this->orderRepository = $orderRepository;
-        $this->refundUnitsCommandValidator = $refundUnitsCommandValidator;
+        $this->payum = $payum;
+        $this->commandValidator = $commandValidator;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function __invoke(RefundUnits $command): void
     {
-        $this->refundUnitsCommandValidator->validate($command);
+        $this->commandValidator->validate($command);
 
-        $baseCommand = $command->baseCommand();
-        $orderNumber = $baseCommand->orderNumber();
+        if (null === ($paymentId = $command->paymentId())) {
+            return;
+        }
 
-        /** @var OrderInterface $order */
-        $order = $this->orderRepository->findOneByNumber($orderNumber);
+        $payment = $this->paymentRepository->find($paymentId);
 
-        $refundedTotal = 0;
-        $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($baseCommand->units(), $orderNumber);
-        $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($baseCommand->shipments(), $orderNumber);
+        if (!($payment instanceof PaymentInterface)) {
+            return;
+        }
 
-        Assert::notNull($order->getCurrencyCode());
+        if (!isset($payment->getDetails()['quickpayPaymentId'])) {
+            return;
+        }
 
-        $baseEvent = new BaseUnitsRefunded(
-            $orderNumber,
-            $baseCommand->units(),
-            $baseCommand->shipments(),
-            $baseCommand->paymentMethodId(),
-            $refundedTotal,
-            $order->getCurrencyCode(),
-            $baseCommand->comment(),
-        );
+        if (null === $paymentMethod = $payment->getMethod()) {
+            return;
+        }
 
-        $this->eventBus->dispatch($baseEvent);
-        $this->eventBus->dispatch(new UnitsRefunded($baseEvent, $command->paymentId()));
+        Assert::isInstanceOf($paymentMethod, PaymentMethodInterface::class);
+
+        $gatewayConfig = $paymentMethod->getGatewayConfig();
+
+        if (null === $gatewayConfig || $gatewayConfig->getFactoryName() !== 'quickpay') {
+            return;
+        }
+
+        $params = [
+            'quickpayPaymentId' => $payment->getDetails()['quickpayPaymentId'],
+            'amount' => $command->amount(),
+        ];
+
+        $gatewayFactory = $this->payum->getGatewayFactory('quickpay');
+        $gateway = $gatewayFactory->create($gatewayConfig->getConfig());
+        $gateway->execute(new Refund($params));
     }
 }
