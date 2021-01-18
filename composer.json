@@ -65,12 +65,26 @@
         "post-install-cmd": "@node-symlink",
         "post-update-cmd": "@node-symlink",
         "post-create-project-cmd": "@node-symlink",
+        "all": [
+            "@checks",
+            "@tests"
+        ],
         "analyse": "phpstan analyse -c phpstan.neon",
         "behat": "behat --colors --strict --no-interaction -vvv -f progress --tags=\"@quickpay-refunds && @ui\"",
         "check-style": "ecs check src/ spec/ tests/",
+        "checks": [
+            "@check-style",
+            "@analyse",
+            "composer normalize --dry-run"
+        ],
         "fix-style": "ecs check src/ spec/ tests/ --fix",
         "node-symlink": "php bin/create_node_symlink.php",
         "phpspec": "phpspec run -vvv",
-        "phpunit": "phpunit"
+        "phpunit": "phpunit",
+        "tests": [
+            "@phpspec",
+            "@phpunit",
+            "@behat"
+        ]
     }
 }
