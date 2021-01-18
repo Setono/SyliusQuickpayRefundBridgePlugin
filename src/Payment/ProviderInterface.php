@@ -8,6 +8,6 @@ use Sylius\RefundPlugin\Event\UnitsRefunded;
 
 interface ProviderInterface
 {
-    /** @return mixed */
+    /** @return int|string|null */
     public function __invoke(UnitsRefunded $event);
 }

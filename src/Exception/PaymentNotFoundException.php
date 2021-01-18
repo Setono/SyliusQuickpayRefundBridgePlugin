@@ -8,7 +8,10 @@ use function Safe\sprintf;
 
 final class PaymentNotFoundException extends \InvalidArgumentException
 {
-    public static function withId(int $id): self
+    /**
+     * @param int|string $id
+     */
+    public static function withId($id): self
     {
         return new self(sprintf('Payment with ID "%s" was not found.', $id));
     }

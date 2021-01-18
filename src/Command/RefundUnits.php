@@ -12,9 +12,13 @@ class RefundUnits
 
     private int $amount;
 
-    private ?int $paymentId;
+    /** @var int|string|null */
+    private $paymentId;
 
-    public function __construct(BaseRefundUnits $baseCommand, int $amount, ?int $paymentId = null)
+    /**
+     * @param int|string|null $paymentId
+     */
+    public function __construct(BaseRefundUnits $baseCommand, int $amount, $paymentId = null)
     {
         $this->baseCommand = $baseCommand;
         $this->amount = $amount;
@@ -31,7 +35,10 @@ class RefundUnits
         return $this->amount;
     }
 
-    public function paymentId(): ?int
+    /**
+     * @return int|string|null
+     */
+    public function paymentId()
     {
         return $this->paymentId;
     }
