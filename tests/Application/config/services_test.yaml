@@ -1,7 +1,7 @@
 imports:
     - { resource: "../../Behat/Resources/services.xml" }
-    - { resource: "../../../vendor/sylius/refund-plugin/tests/Behat/Resources/services.xml" }
     - { resource: "../../../vendor/sylius/sylius/src/Sylius/Behat/Resources/config/services.xml" }
+    - { resource: "../../../vendor/sylius/refund-plugin/tests/Behat/Resources/services.xml" }
 
 # These services are taken from here: vendor/sylius/refund-plugin/tests/Application/config/services_test.yaml
 services:
