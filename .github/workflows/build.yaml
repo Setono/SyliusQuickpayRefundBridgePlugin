@@ -35,7 +35,6 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "composer"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -80,7 +79,7 @@ jobs:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     php-version: "${{ matrix.php-version }}"
-                    tools: "composer, composer-require-checker, composer-unused"
+                    tools: "composer-require-checker, composer-unused"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -116,7 +115,6 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "composer"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -150,7 +148,6 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "composer"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -189,7 +186,6 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "composer"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -234,7 +230,6 @@ jobs:
                     coverage: "pcov"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     php-version: "${{ matrix.php-version }}"
-                    tools: "composer"
 
             -   name: "Set up problem matchers for phpunit/phpunit"
                 run: "echo \"::add-matcher::${{ runner.tool_cache }}/phpunit.json\""
