@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusQuickpayRefundBridgePlugin\Application;
 
+use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -58,6 +59,15 @@ final class Kernel extends BaseKernel
     private function isTestEnvironment(): bool
     {
         return 0 === strpos($this->getEnvironment(), 'test');
+    }
+
+    protected function getContainerBaseClass(): string
+    {
+        if ($this->isTestEnvironment()) {
+            return MockerContainer::class;
+        }
+
+        return parent::getContainerBaseClass();
     }
 
     private function loadContainerConfiguration(LoaderInterface $loader, string $confDir): void
