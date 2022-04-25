@@ -32,7 +32,7 @@ final class OrderRefundsPage extends SymfonyPage implements OrderRefundsPageInte
 
     public function canChooseQuickpayPaymentToRefund(): bool
     {
-        return null !== $this->getElement('quickpay_payments');
+        return $this->hasElement('quickpay_payments');
     }
 
     public function countRefundableUnitsWithProduct(string $productName): int
@@ -65,7 +65,7 @@ final class OrderRefundsPage extends SymfonyPage implements OrderRefundsPageInte
         $this->orderRefundsPage->pickAllUnitsToRefund();
     }
 
-    public function pickOrderShipment(): void
+    public function pickOrderShipment(?string $shippingMethodName = null): void
     {
         $this->orderRefundsPage->pickOrderShipment();
     }
@@ -118,6 +118,11 @@ final class OrderRefundsPage extends SymfonyPage implements OrderRefundsPageInte
     public function isPaymentMethodVisible(string $paymentMethodName): bool
     {
         return $this->orderRefundsPage->isPaymentMethodVisible($paymentMethodName);
+    }
+
+    public function getOriginalPaymentMethodName(): string
+    {
+        return $this->orderRefundsPage->getOriginalPaymentMethodName();
     }
 
     protected function getDefinedElements(): array

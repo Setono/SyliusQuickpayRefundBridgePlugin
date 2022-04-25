@@ -21,14 +21,11 @@ use Webmozart\Assert\Assert;
 
 final class QuickpayPaymentContext implements Context
 {
-    /** @var SharedStorageInterface */
-    private $sharedStorage;
+    private SharedStorageInterface $sharedStorage;
 
-    /** @var PaymentMethodRepositoryInterface */
-    private $paymentMethodRepository;
+    private PaymentMethodRepositoryInterface $paymentMethodRepository;
 
-    /** @var ExampleFactoryInterface */
-    private $paymentMethodExampleFactory;
+    private ExampleFactoryInterface $paymentMethodExampleFactory;
 
     public function __construct(
         SharedStorageInterface $sharedStorage,
@@ -127,9 +124,6 @@ final class QuickpayPaymentContext implements Context
         ];
     }
 
-    /**
-     * @param Collection|OrderItemInterface[] $items
-     */
     private function convertItems(Collection $items): array
     {
         return $items->map(
