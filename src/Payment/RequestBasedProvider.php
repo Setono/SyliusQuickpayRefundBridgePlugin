@@ -24,6 +24,7 @@ final class RequestBasedProvider implements ProviderInterface
             return null;
         }
 
+        /** @psalm-suppress InternalMethod */
         return $request->get('sylius_refund_quickpay_payment');
     }
 }

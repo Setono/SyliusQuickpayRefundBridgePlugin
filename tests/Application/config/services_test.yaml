@@ -1,4 +1,16 @@
 imports:
     - { resource: "../../Behat/Resources/services.xml" }
-    - { resource: "../../../vendor/sylius/refund-plugin/tests/Behat/Resources/services.xml" }
     - { resource: "../../../vendor/sylius/sylius/src/Sylius/Behat/Resources/config/services.xml" }
+    - { resource: "../../../vendor/sylius/refund-plugin/tests/Behat/Resources/services.xml" }
+
+# These services are taken from here: vendor/sylius/refund-plugin/tests/Application/config/services_test.yaml
+services:
+    Tests\Sylius\RefundPlugin\Behat\Services\Generator\FailedCreditMemoGenerator:
+        decorates: 'Sylius\RefundPlugin\Generator\CreditMemoGeneratorInterface'
+        arguments:
+            - '@Tests\Sylius\RefundPlugin\Behat\Services\Generator\FailedCreditMemoGenerator.inner'
+
+    Tests\Sylius\RefundPlugin\Behat\Services\Factory\FailedRefundPaymentFactory:
+        decorates: 'sylius_refund.factory.refund_payment'
+        arguments:
+            - '@Tests\Sylius\RefundPlugin\Behat\Services\Factory\FailedRefundPaymentFactory.inner'

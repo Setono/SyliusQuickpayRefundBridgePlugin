@@ -1,6 +1,6 @@
 framework:
     messenger:
-        default_bus: sylius_refund_plugin.command_bus
+        default_bus: sylius.command_bus
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         # failure_transport: failed
 
