@@ -20,6 +20,10 @@ class RefundUnits
      */
     public function __construct(BaseRefundUnits $baseCommand, int $amount, $paymentId = null)
     {
+        if (!is_string($paymentId) && !is_int($paymentId) && null !== $paymentId) {
+            throw new \InvalidArgumentException('The $payment id must be either string, int or null');
+        }
+
         $this->baseCommand = $baseCommand;
         $this->amount = $amount;
         $this->paymentId = $paymentId;
